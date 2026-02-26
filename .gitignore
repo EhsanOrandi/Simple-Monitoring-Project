@@ -1,6 +1,12 @@
 # Ignore log file and virtual environment of Flask app
 app/app.log
 app/venv
+app/.git
+app/.gitignore
 
 # Ignore node_modules of Angular
 ui/node_modules
+ui/.angular
+ui/.editorconfig
+ui/.git
+ui/.gitignore
