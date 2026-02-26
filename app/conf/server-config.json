@@ -1,0 +1,17 @@
+{
+    "name": "python server config, modified by ansible",
+
+    "PYSRV_IS_PRODUCTION": "",
+
+    "PYSRV_DATABASE_HOST": "{{ db_host }}",
+    "PYSRV_DATABASE_PORT": "5432",
+    "PYSRV_DATABASE_NAME": "{{ db_name }}",
+    "PYSRV_DATABASE_USER": "{{ db_user }}",
+    "PYSRV_DATABASE_PASSWORD": "{{ db_password }}",
+
+    "PYSRV_COOKIE_HTTPS_ONLY": false,
+    "PYSRV_REDIS_HOST": "{{ redis_host }}",
+    "PYSRV_DOMAIN_NAME": "",
+    "PYSRV_CORS_ALLOW_ORIGIN": "*"
+}
+

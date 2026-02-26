@@ -1,0 +1,105 @@
+<div class="select_city_container">
+
+</div>
+
+<div class="dashboard_container">
+  <div class="info_sidebar">
+    <div class="counts_box">
+      <div class="count_item routes_count">
+        <div class="count_icon">
+          <span class="fa-solid fa-route"></span>
+        </div>
+        <div class="count_info">
+          <span class="count_value">{{ routes_count }}</span>
+          <span class="count_label">مسیر عملیاتی</span>
+        </div>
+      </div>
+
+      <div class="count_item sensors_count">
+        <div class="count_icon">
+          <span class="fa-solid fa-map-pin"></span>
+        </div>
+        <div class="count_info">
+          <span class="count_value">{{ sensors_count }}</span>
+          <span class="count_label">سنسور رطوبت</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="routes_list">
+      <div class="routes_list_header">
+        <span>لیست مسیرها</span>
+      </div>
+      <div class="route_item" *ngFor="let route of routes_list">
+        <div class="route_name" (click)="toggleChartModal(route)">
+          <span class="pulsing_dot" [style.background]="route.color"></span>
+          <h5 class="route_name_value">{{ route.route.name }}</h5>
+        </div>
+        <div class="route_data">
+          <div class="route_data_item route_temperature">
+            <i class="route_data_icon fa-solid fa-temperature-three-quarters"></i>
+            <!-- <span class="route_data_value">دما: 24.7 <small>C&deg;</small></span> -->
+            <span class="route_data_value">دما: {{ route.temp }}&nbsp;<small><sup>0</sup>C</small></span>
+          </div>
+          <div class="route_data_item route_humidity">
+            <i class="route_data_icon fa-solid fa-droplet"></i>
+            <span class="route_data_value">رطوبت: {{ route.med_humidity }}&nbsp;<small>%</small></span>
+          </div>
+        </div>
+        <div class="route_last_data_time">
+          <i class="route_last_data_time_icon fa-regular fa-clock"></i>
+          <span class="route_last_data_time_value">آخرین دریافت: {{ route.route.last_data_time | jalali }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="map_chart_container">
+    <div class="map_container" leaflet [leafletOptions]="options" [leafletLayers]="layers"></div>
+    <div class="chart_container"></div>
+  </div>
+</div>
+
+<c-modal #chart_modal id="chart_modal" size="xl" [visible]="chart_modal_visible" (visibleChange)="handleChartModal($event)">
+  <c-modal-header>
+    <h5 cModalTitle>{{ selected_route.route['name'] }}</h5>
+  </c-modal-header>
+  <c-modal-body>
+    <div class="chart_filters">
+      <input type="hidden" name="123">
+      <div class="date_inputs">
+        <div class="date_input_container">
+          <label for="start_date">از تاریخ</label>
+          <input data-jdp name="start_date" class="form-control" id="start_date" [(ngModel)]="chart_start_date">
+        </div>
+        <div class="date_input_container">
+          <label for="end_date">تا تاریخ</label>
+          <input data-jdp name="end_date" class="form-control" id="end_date" [(ngModel)]="chart_end_date">
+        </div>
+      </div>
+      <form [formGroup]="delta_radio" class="select_dalta_form">
+        <c-button-group aria-label="Basic radio toggle button group" role="group">
+          <input class="btn-check" formControlName="chart_delta" type="radio" value="live" />
+          <label (click)="setDeltaRadioValue('live')" cButton cFormCheckLabel variant="outline">داده لحظه ای</label>
+
+          <input class="btn-check" formControlName="chart_delta" type="radio" value="daily" />
+          <label (click)="setDeltaRadioValue('daily')" cButton cFormCheckLabel variant="outline">میانگین روزانه</label>
+
+          <input class="btn-check" formControlName="chart_delta" type="radio" value="weekly" />
+          <label (click)="setDeltaRadioValue('weekly')" cButton cFormCheckLabel variant="outline">میانگین هفتگی</label>
+
+          <input class="btn-check" formControlName="chart_delta" type="radio" value="monthly" />
+          <label (click)="setDeltaRadioValue('monthly')" cButton cFormCheckLabel variant="outline">میانگین ماهانه</label>
+        </c-button-group>
+      </form>
+      <div class="get_chart_data_button">
+        <button cButton class="btn" (click)="getChartData()">دریافت اطلاعات</button>
+      </div>
+    </div>
+    <div id="chart_data" style="width: 100%; height: 70vh;"></div>
+  </c-modal-body>
+  <c-modal-footer>
+    <button (click)="toggleChartModal()" cButton color="secondary">
+      بستن
+    </button>
+  </c-modal-footer>
+</c-modal>
